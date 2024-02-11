@@ -1,0 +1,75 @@
+body {
+    background-color: #acc5a4;
+    text-align: center;
+  }
+
+body, html {
+    height: 100%;
+    margin: 0;
+  }
+
+.titulo {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 60px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.game { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.plane {
+    
+    margin: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    height: 300px;
+    transform-style: preserve-3d;
+    transform: rotateX(30deg);
+
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+.cell {
+    width: 90px;
+    height: 90px;
+    background-color: #eee;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .cell:hover {
+    background-color: #ddd;
+  }
+  
+  .winning-cell {
+    background-color: yellow;
+    color: black;
+  }
+
+  .turn{
+      display: inline-block;
+      
+      font-size: 50px;
+      font-weight: bold;
+      text-align: center;
+
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+    
+      background-color: #ddd;
+      border-radius: 15px;
+      
+  }
