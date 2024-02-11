@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Busquedas No Informadas</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+    <h1 class="titulo">Busquedas no informadas</h1>
+    <div class="contenedor">
+        <div class="formularios">
+            <form>
+                <label for="NodosPadre">Número de nodos padre</label>
+                <input type="text" placeholder="Ingresa un número" id="NumNodosPadre">
+                
+                <label for="NodosHijo">Números de nodos hijos</label>
+                <input type="text" placeholder="Ingresa un número" id="NumNodosHijo">
+        
+                <label for="Amplitud">Amplitud del arbol</label>
+                <input type="text" placeholder="Ingresa un número" id="Amplitud">
+        
+                <label for="Profundidad">Profundidad del arbol</label>
+                <input type="text" placeholder="Ingresa un número" id="Profundidad">
+        
+                <button type="button" onclick="generarArbol()">GENERAR ARBOL DE BUSQUEDA</button>
+            </form>
+            <form>
+                <label for="NodoMeta">Nodo Meta</label>
+                <input type="text" placeholder="Ingresa un número" id="NodoMeta">
+        
+                
+                <label for="BUSQUEDAS">BUSQUEDAS</label>
+           
+                <div class="opcion">
+                    <input type="radio" id="opcion1" name="busquedas" value="Profundidad">
+                    <label for="opcion1">Por Profundidad</label>
+                </div>
+            
+                <div class="opcion">
+                    <input type="radio" id="opcion2" name="busquedas" value="Amplitud">
+                    <label for="opcion2">Por Amplitud</label>
+                </div>
+                
+                <button type="button" onclick="guardarDatosRecorrido()">GENERAR RECORRIDO</button>
+            </form>
+        </div>      
+        
+        <div id="tree-container"></div>
+        <div id="resultado"></div>
+    </div>
+    <script src="prueba.js"></script>
+</body>
+</html>

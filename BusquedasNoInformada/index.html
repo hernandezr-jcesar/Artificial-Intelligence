@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Busquedas No Informadas</title>
+    <style>
+        body {
+            align-items: center;
+            background-color: rgb(221, 235, 227);
+            height:100%;
+            margin:0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .titulo{
+            font-size: 3rem;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .contenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size:large;
+        }
+        input {
+            font-family: 'Courier New', Courier, monospace;
+            font-size:large;
+        }
+
+        .opcion {
+            display: flex;
+            align-items: center;
+        }
+
+        #tree-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        button {
+        background-color:aqua;
+        border-radius: 15px;
+            align-self: center;
+        }
+
+        div {
+            border-color: gray;
+            border-width: 1px;
+            border-style: dotted;
+        }
+    </style>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+    <h1 class="titulo">Busquedas no informadas</h1>
+    <div class="contenedor">
+        <div class="formularios">
+            <form>
+                <label for="NodosPadre">Número de nodos padre</label>
+                <input type="text" placeholder="Ingresa un número" id="NumNodosPadre">
+                
+                <label for="NodosHijo">Números de nodos hijos</label>
+                <input type="text" placeholder="Ingresa un número" id="NumNodosHijo">
+        
+                <label for="Amplitud">Amplitud del arbol</label>
+                <input type="text" placeholder="Ingresa un número" id="Amplitud">
+        
+                <label for="Profundidad">Profundidad del arbol</label>
+                <input type="text" placeholder="Ingresa un número" id="Profundidad">
+        
+                <button type="button" onclick="generarArbol()">GENERAR ARBOL DE BUSQUEDA</button>
+            </form>
+            <form>
+                <label for="NodoMeta">Nodo Meta</label>
+                <input type="text" placeholder="Ingresa un número" id="NodoMeta">
+        
+                
+                <label for="BUSQUEDAS">BUSQUEDAS</label>
+           
+                <div class="opcion">
+                    <input type="radio" id="opcion1" name="busquedas" value="Profundidad">
+                    <label for="opcion1">Por Profundidad</label>
+                </div>
+            
+                <div class="opcion">
+                    <input type="radio" id="opcion2" name="busquedas" value="Amplitud">
+                    <label for="opcion2">Por Amplitud</label>
+                </div>
+                
+                <button type="button" onclick="guardarDatosRecorrido()">GENERAR RECORRIDO</button>
+            </form>
+        </div>      
+        
+        <div id="tree-container"></div>
+        <div id="resultado"></div>
+    </div>
+    <script>
+        let recorrido = [];
+        let data;
+        let network;
+
+        function generarArbol() {
+        const numNodosPadre = parseInt(document.getElementById('NumNodosPadre').value);
+        const numNodosHijo = parseInt(document.getElementById('NumNodosHijo').value);
+        const amplitud = parseInt(document.getElementById('Amplitud').value);
+        const profundidad = parseInt(document.getElementById('Profundidad').value);
+
+        data = {
+            nodes: [],
+            edges: []
+        };
+
+        // Agregar nodo raíz
+        data.nodes.push({ id: 1, label: 'Nodo 1', level: 0 }); // Agregar nivel (level) para orden jerárquico
+
+        let nodeId = 2; // ID de nodo actual
+
+        // Función para construir el árbol recursivamente
+        function buildTree(parentNodeId, depth, level) {
+            if (depth >= profundidad) return;
+
+            for (let i = 0; i < amplitud; i++) {
+            const childNodeId = nodeId++;
+            data.nodes.push({ id: childNodeId, label: `Nodo ${childNodeId}`, level: level + 1 }); // Agregar nivel (level) para orden jerárquico
+            data.edges.push({ from: parentNodeId, to: childNodeId });
+            buildTree(childNodeId, depth + 1, level + 1); // Incrementar el nivel en la llamada recursiva
+            }
+        }
+
+        // Construir el árbol comenzando desde el nodo raíz
+        buildTree(1, 0, 0); // El nivel de la raíz es 0
+
+        const container = document.getElementById('tree-container');
+        const options = {
+            layout: {
+            hierarchical: {
+                direction: 'UD', // Cambiar la dirección del árbol hacia abajo (Up-Down)
+                sortMethod: 'directed' // Ordenar los nodos en función de las conexiones
+            }
+            }
+        };
+        network = new vis.Network(container, data, options);
+        }
+
+        function guardarDatosRecorrido() {
+        const nodoMeta = parseInt(document.getElementById('NodoMeta').value);
+        const opcionProfundidad = document.getElementById('opcion1').checked;
+        const opcionAmplitud = document.getElementById('opcion2').checked;
+
+        recorrido = [];
+
+        if (opcionProfundidad) {
+            recorridoPorProfundidad(1, nodoMeta);
+        } else if (opcionAmplitud) {
+            recorridoPorAmplitud(1, nodoMeta);
+        }
+
+        mostrarRecorrido();
+        }
+
+        function recorridoPorProfundidad(startNodeId, nodoMeta) {
+            const stack = [startNodeId];
+            const visited = new Set();
+        
+            while (stack.length > 0) {
+            const nodeId = stack.pop();
+            visited.add(nodeId);
+            recorrido.push(nodeId);
+        
+            if (nodeId === nodoMeta) {
+                return;
+            }
+        
+            const neighbors = network.getConnectedNodes(nodeId);
+            for (const neighbor of neighbors) {
+                if (!visited.has(neighbor)) {
+                stack.push(neighbor);
+                visited.add(neighbor);
+                }
+            }
+            }
+        }
+        
+
+        function recorridoPorAmplitud(startNodeId, nodoMeta) {
+        const queue = [startNodeId];
+        const visited = new Set();
+
+        while (queue.length > 0) {
+            const nodeId = queue.shift();
+            visited.add(nodeId);
+            recorrido.push(nodeId);
+
+            if (nodeId === nodoMeta) {
+            return;
+            }
+
+            const neighbors = network.getConnectedNodes(nodeId);
+            for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                queue.push(neighbor);
+                visited.add(neighbor);
+            }
+            }
+        }
+        }
+
+        function mostrarRecorrido() {
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = '';
+
+        if (recorrido.length === 0) {
+            resultadoDiv.textContent = 'No se encontró el nodo meta.';
+        } else {
+            const recorridoStr = recorrido.join(' → ');
+            resultadoDiv.textContent = `Recorrido: ${recorridoStr}`;
+        }
+        }
+
+    </script>
+</body>
+</html>

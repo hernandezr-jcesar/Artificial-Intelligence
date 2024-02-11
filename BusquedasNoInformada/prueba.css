@@ -1,0 +1,14 @@
+#tree {
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .node {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+    margin: 0 10px;
+    line-height: 40px;
+  }
+  
